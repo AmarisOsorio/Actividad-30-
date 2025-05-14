@@ -62,39 +62,27 @@ recuperacionContraController.requestCode = async (req, res) => {
 /******************************* VERIFICAR EL CÓDIGO QUE ME ENVIARON POR EL CORREO************************************* */
 
 recuperacionContraController.verifyCode = async (req, res) => {  
-    const {code} = req.body;
+    const { code } = req.body;
 
     try {
-        //Obtener el token que esta guardado en las cookies
         const token = req.cookies.tokenRecoveryCode;
+        const decoded = jsonwebtoken.verify(token, config.JWT.secret);
 
-        //Extraer todos los datos del token
-        const decoded = jsonwebtoken.verify(token, config.JWT.secret)
-
-
-        /**
-         * Comparar el código que está guardando en el token
-         * con el código que el usuario escribió
-         */
-        if(decoded.code !== code){
-            return res.json({message: "Invalid Code"});
+        if (decoded.code !== code) {
+            return res.json({ message: "Invalid Code" });
         }
 
-        //Marcamos el token como verificando (si es correcto)
         const newToken = jsonwebtoken.sign(
-            //1. ¿Qué vamos a guardar?
-            {correo: decoded.email, code: decoded.code, userType: decoded.userType, verify: true},
-            //2. clsve secreta
+            { correo: decoded.correo, code: decoded.code, userType: decoded.userType, verify: true },
             config.JWT.secret,
-            //¿Cuando vence?
-            {expiresIn:"25m"}
-        )
+            { expiresIn: "25m" }
+        );
 
-        res.cookie("tokenRecoveryCode" , newToken, {maxAge: 25 * 60 * 1000})
-
-        res.json({messge:"Code verified successfully"})
+        res.cookie("tokenRecoveryCode", newToken, { maxAge: 25 * 60 * 1000 });
+        res.json({ message: "Code verified successfully" });
     } catch (error) {
-        console.log("error" + error) 
+        console.error("Error en verifyCode: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
@@ -123,7 +111,7 @@ recuperacionContraController.newPassword = async (req,res) => {
     if(decoded.userType === "client"){
       user = await clientesModel.findOneAndUpdate({correo},{contrasenia:hashedPassword},{new:true})
     }else if(decoded.userType === "employee"){
-      user = await clientesModel.findOneAndUpdate({correo},{contrasenia:hashedPassword},{new:true})
+      user = await empleadosModel.findOneAndUpdate({correo},{contrasenia:hashedPassword},{new:true})
     }
 
     res.clearCookie("tokenRecoveryCode")
