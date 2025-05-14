@@ -43,3 +43,23 @@ const clientesSchema = new Schema({
 }); 
 
 export default model("Clientes", clientesSchema);
+
+
+/**
+ * 
+ * Json clientes
+{
+    "nombre" : "Amaris", 
+    "correo" : "20200003@ricaldone.edu.sv", 
+    "contrasenia" : "1234", 
+    "telefono" : "12345678", 
+    "direccion" : "Ayutuxtepeque", 
+    "activo": false
+}
+
+{
+    "verificationCode" : "d3f94c"
+}
+
+
+ */

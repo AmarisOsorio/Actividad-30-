@@ -31,12 +31,12 @@ loginController.login = async (req,res) => {
             userFound = {_id : "Admin"};
         }else{
             /*2. Empleados*/
-            userFound = await EmployeesModel.findOne({correo});
+            userFound = await empleadosModels.findOne({correo});
             userType = "Empleado"
 
             /*3. Clientes*/
             if(!userFound){
-                userFound = await ClientsModel.findOne({correo});
+                userFound = await clientesModels.findOne({correo});
                 userType = "Cliente"
             }
         }

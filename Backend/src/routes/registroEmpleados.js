@@ -1,9 +1,9 @@
 import express from "express";
-import registroControllers from "../controllers/registroClientesController.js";
+import registroEmpleadosControllers from "../controllers/registroEmpleadosController.js";
 
 const router = express.Router();
 
 router.route("/")
-.post(registroControllers.registro)
+.post(registroEmpleadosControllers.registroEmp)
 
 export default router;

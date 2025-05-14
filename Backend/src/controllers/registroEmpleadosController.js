@@ -1,4 +1,4 @@
-import Empleados from "../models/Empleados";
+import Empleados from "../models/Empleados.js";
 import bcryptjs from "bcryptjs"; //Encriptar
 import jsonwebtoken from "jsonwebtoken"; //Generar Token
 import {config} from "../config.js"
@@ -17,10 +17,10 @@ registroEmpleadoController.registroEmp = async (req,res) => {
         }   
 
         //Hashear o encriptar la contraseña
-        const passwordHash = await bcryptjs.hash(password , 10);
+        const passwordHash = await bcryptjs.hash(contrasenia , 10);
 
         //Guardar el empleadp
-        const newEmployee = new Employees({nombre , correo , contrasenia: passwordHash , telefono , direccion , puesto , fecha_contratacion , salario , activo});
+        const newEmployee = new Empleados({nombre , correo , contrasenia: passwordHash , telefono , direccion , puesto , fecha_contratacion , salario , activo});
         await newEmployee.save();
 
         //Generar un token que valide que ya estoy registrado 
